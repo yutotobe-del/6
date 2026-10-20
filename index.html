@@ -34,7 +34,7 @@ function typePalette(){const t=$('trainType').value;const map={'各駅停車':'#
 // 種別文字も通常のフォント文字ではなく、LED風の点で描画する
 function drawDotLabel(ctx,text,x,y,w,h,color,dotScale=100){
  // 種別枠を横に広げた分、文字も横方向に大きく・太く見えるようLEDドットを再サンプリング
- const scale=8,off=document.createElement('canvas');off.width=Math.max(1,Math.floor(w*scale));off.height=Math.max(1,Math.floor(h*scale));
+ const scale=12,off=document.createElement('canvas');off.width=Math.max(1,Math.floor(w*scale));off.height=Math.max(1,Math.floor(h*scale));
  const o=off.getContext('2d',{willReadFrequently:true});o.clearRect(0,0,off.width,off.height);o.fillStyle='#fff';o.textAlign='center';o.textBaseline='middle';
  const chars=[...text];
  const fontSize=Math.max(9,Math.min(off.height*.70,off.width/(Math.max(1,chars.length)*.72)));
@@ -42,7 +42,7 @@ function drawDotLabel(ctx,text,x,y,w,h,color,dotScale=100){
  // 横幅を十分に使い、長い種別名も枠内に収める
  if(off.width>8&&off.height>4)o.fillText(text,off.width/2,off.height/2,Math.max(1,off.width-8));
  const data=o.getImageData(0,0,off.width,off.height).data;
- const step=Math.max(1,Math.floor(Math.min(off.width/Math.max(1,chars.length*14),off.height/16)));
+ const step=Math.max(1,Math.floor(Math.min(off.width/Math.max(1,chars.length*20),off.height/24)));
  ctx.fillStyle=color;
  for(let py=0;py<off.height;py+=step)for(let px=0;px<off.width;px+=step){let sum=0,count=0;for(let yy=py;yy<Math.min(py+step,off.height);yy++)for(let xx=px;xx<Math.min(px+step,off.width);xx++){sum+=data[(yy*off.width+xx)*4+3];count++}if(count&&sum/count>65){const dx=x+(px+step/2)/scale,dy=y+(py+step/2)/scale,r=Math.max(.6,step/scale*.62*dotScale/100);if(state.typeDotShape==='square'){const side=Math.max(1,step/scale*.92*dotScale/100);ctx.fillRect(dx-side/2,dy-side/2,side,side)}else{ctx.beginPath();ctx.arc(dx,dy,r,0,Math.PI*2);ctx.fill()}}}
 }
